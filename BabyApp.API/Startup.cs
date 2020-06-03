@@ -91,6 +91,7 @@ namespace BabyApp.API
             app.UseAuthentication();
             app.UseAuthorization();
 
+            // important not to allowCredentials()!!!!
             app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
             app.UseEndpoints(endpoints =>
