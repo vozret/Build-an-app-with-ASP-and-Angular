@@ -43,6 +43,8 @@ namespace BabyApp.API
                     Newtonsoft.Json.ReferenceLoopHandling.Ignore;
             });
             services.AddCors();
+            // matching CloudinarySettings.cs with info in appsettings.json
+            services.Configure<CloudinarySettings>(Configuration.GetSection("CloudinarySettings"));
             services.AddAutoMapper(typeof(BabyRepository).Assembly);
             services.AddScoped<IAuthRepository, AuthRepository>();
             services.AddScoped<IBabyRepository, BabyRepository>();

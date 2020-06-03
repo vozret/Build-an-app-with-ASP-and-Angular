@@ -9,6 +9,7 @@ namespace BabyApp.API.Helpers
     {
         public AutoMapperProfiles()
         {
+            // CreateMap<source, destination>
             CreateMap<User, UserForListDto>()
                 .ForMember(dest => dest.PhotoUrl, opt => 
                     opt.MapFrom(src => 
@@ -23,6 +24,8 @@ namespace BabyApp.API.Helpers
                     opt.MapFrom(src => src.DateofBirth.CalculateAge()));;
             CreateMap<Photo, PhotosForDetailedDto>();
             CreateMap<UserForUpdateDto, User>();
+            CreateMap<Photo, PhotoForReturnDto>();
+            CreateMap<PhotoForCreationDto, Photo>();
         }
     }
 }

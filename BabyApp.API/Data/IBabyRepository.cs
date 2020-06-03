@@ -16,5 +16,6 @@ namespace BabyApp.API.Data
          Task<IEnumerable<User>> GetUsers();
          // get individual user
          Task<User> GetUser(int id);
+         Task<Photo> GetPhoto(int id);
     }
 }
