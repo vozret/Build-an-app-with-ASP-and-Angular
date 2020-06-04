@@ -3,6 +3,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
 using BabyApp.API.Data;
 using BabyApp.API.Dtos;
 using BabyApp.API.Models;
@@ -18,8 +19,10 @@ namespace BabyApp.API.Controllers
     {
         private readonly IAuthRepository _repo;
         private readonly IConfiguration _config;
-        public AuthController(IAuthRepository repo, IConfiguration config)
+        private readonly IMapper _mapper;
+        public AuthController(IAuthRepository repo, IConfiguration config, IMapper mapper)
         {
+            _mapper = mapper;
             _config = config;
             _repo = repo;
 
@@ -54,6 +57,7 @@ namespace BabyApp.API.Controllers
             if (userFromRepo == null)
                 return Unauthorized();
 
+            // frequently used token
             var claims = new[]
             {
                 new Claim(ClaimTypes.NameIdentifier, userFromRepo.Id.ToString()),
@@ -76,9 +80,14 @@ namespace BabyApp.API.Controllers
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
 
+            //map<returnedData>(dataWeSend)
+            var user = _mapper.Map<UserForListDto>(userFromRepo);
+
+            //returned alongside the token, good for user's profile picture
             return Ok(new
             {
-                token = tokenHandler.WriteToken(token)
+                token = tokenHandler.WriteToken(token),
+                user
             });
 
         }
