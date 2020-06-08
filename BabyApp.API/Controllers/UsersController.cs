@@ -5,11 +5,13 @@ using System.Threading.Tasks;
 using AutoMapper;
 using BabyApp.API.Data;
 using BabyApp.API.Dtos;
+using BabyApp.API.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BabyApp.API.Controllers
 {
+    [ServiceFilter(typeof(LogUserActivity))]
     [Authorize]
     [Route("api/[controller]")]
     [ApiController]
