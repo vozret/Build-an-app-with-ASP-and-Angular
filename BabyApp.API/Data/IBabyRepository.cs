@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using BabyApp.API.Helpers;
 using BabyApp.API.Models;
 
 // creating a new repository for our API
@@ -13,7 +14,7 @@ namespace BabyApp.API.Data
          void Delete<T>(T entity) where T: class;
          // zero or 0< changes to save
          Task<bool> SaveAll();
-         Task<IEnumerable<User>> GetUsers();
+         Task<PagedList<User>> GetUsers(UserParams userParams);
          // get individual user
          Task<User> GetUser(int id);
          Task<Photo> GetPhoto(int id);

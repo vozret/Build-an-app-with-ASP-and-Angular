@@ -14,6 +14,8 @@ namespace BabyApp.API.Dtos
         [Required]
         public string Gender { get; set; }
         [Required]
+        public string LookingFor { get; set; }
+        [Required]
         public string NameAndSurname { get; set; }
         [Required]
         public DateTime DateOfBirth { get; set; }

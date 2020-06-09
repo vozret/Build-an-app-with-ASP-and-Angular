@@ -27,11 +27,25 @@ namespace BabyApp.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetUsers()
+        public async Task<IActionResult> GetUsers([FromQuery]UserParams userParams)
         {
-            var users = await _repo.GetUsers();
+            var currentUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+            var userFromRepo = await _repo.GetUser(currentUserId);
+
+            userParams.UserId = currentUserId;
+
+            if(string.IsNullOrEmpty(userParams.LookingFor))
+            {
+                userParams.LookingFor = userFromRepo.LookingFor == "a babysitter" ? "a babysitting job" : "a babysitter";
+            }
+
+            var users = await _repo.GetUsers(userParams);
 
             var usersToReturn = _mapper.Map<IEnumerable<UserForListDto>>(users);
+
+            Response.AddPagination(users.CurentPage, users.PageSize,
+                users.TotaCount, users.TotalPages);
 
             return Ok(usersToReturn);
         }

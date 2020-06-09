@@ -39,6 +39,7 @@ export class RegisterComponent implements OnInit {
   createRegisterForm() {
     this.registerForm = this.fb.group({
       gender: ['male'],
+      lookingFor: ['a babysitter'],
       username: ['', Validators.required],
       nameAndSurname: ['', Validators.required],
       dateOfBirth: [, Validators.required],
@@ -62,7 +63,7 @@ export class RegisterComponent implements OnInit {
         this.alertify.success('Registration successful');
       }, error => {
         this.alertify.error(error);
-      }, ()=> {
+      }, () => {
         this.authService.login(this.user).subscribe(() => {
           this.router.navigate(['/members']);
         });
