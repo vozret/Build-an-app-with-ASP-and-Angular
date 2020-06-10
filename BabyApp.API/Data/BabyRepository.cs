@@ -26,6 +26,13 @@ namespace BabyApp.API.Data
             _context.Remove(entity);
         }
 
+        public async Task<Like> GetLike(int userId, int recipientId)
+        {
+            //get the ids
+            return await _context.Likes.FirstOrDefaultAsync( u =>
+                u.LikerId == userId && u.LikeeId == recipientId);
+        }
+
         public async Task<Photo> GetMainPhotoForUser(int userId)
         {
             return await _context.Photos.Where(u => u.UserId == userId)
@@ -55,6 +62,20 @@ namespace BabyApp.API.Data
 
             users = users.Where(u => u.LookingFor == userParams.LookingFor);
 
+            if (userParams.Likers)
+            {
+                // return the list of my likers
+                var userLikers = await GetUserLikes(userParams.UserId, userParams.Likers);
+                users = users.Where(u => userLikers.Contains(u.Id));
+            }
+
+            if (userParams.Likees)
+            {
+                // return the list of my likees, userParams.Likers because we're checking the if statement in the GetUserLikes
+                var userLikees = await GetUserLikes(userParams.UserId, userParams.Likers);
+                users = users.Where(u => userLikees.Contains(u.Id));
+            }
+
             if (!string.IsNullOrEmpty(userParams.OrderBy))
             {
                 switch (userParams.OrderBy)
@@ -69,6 +90,25 @@ namespace BabyApp.API.Data
             }
 
             return await PagedList<User>.CreateAsync(users, userParams.PageNumber, userParams.PageSize);
+        }
+
+        // id -> id of the current user, likers -> we want to return the list of likers
+        private async Task<IEnumerable<int>> GetUserLikes(int id, bool likers)
+        {
+            var user = await _context.Users.Include(x => x.Likers)
+                .Include(x => x.Likees)
+                .FirstOrDefaultAsync(u => u.Id == id);
+
+            //return the list of my likers, I am the likee
+            if (likers)
+            {
+                return user.Likers.Where(u => u.LikeeId == id).Select(i => i.LikerId);
+            }
+            // return the list of my likees, I am the liker
+            else
+            {
+                return user.Likees.Where(u => u.LikerId == id).Select(i => i.LikeeId);
+            }
         }
 
         public async Task<bool> SaveAll()
