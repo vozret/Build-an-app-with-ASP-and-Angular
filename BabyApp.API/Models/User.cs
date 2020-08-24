@@ -22,5 +22,7 @@ namespace BabyApp.API.Models
         public ICollection<Photo> Photos { get; set; }
         public ICollection<Like> Likers { get; set; }
         public ICollection<Like> Likees { get; set; }
+        public ICollection<Message> MessageSent { get; set; }
+        public ICollection<Message> MessagesReceived { get; set; }
     }
 }
